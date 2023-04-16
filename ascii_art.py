@@ -142,4 +142,3 @@ def hang(mistakes: int) -> None:
 if __name__ == '__main__':
     hangman_logo()
     hang()
-    

@@ -26,20 +26,16 @@ def pick_word() -> str:
         sys.exit()
 
 def main() -> None:
-    
+    '''
+    Run a game
+    '''
     word = pick_word()
     result = {i:'_ ' for i in range(0, len(word))}
     mistakes_letters = []
 
     while len(mistakes_letters) < 6:
+        
         hang(mistakes=len(mistakes_letters))
-        if '_ ' not in result.values():
-            print(100* '\n')
-            print(f'Вы угадали слово "{word}"! Поздравляю!\n\n')
-            fireworks()
-            sleep(5)
-            sys.exit()
-            
         print(f'Количество ошибок: {len(mistakes_letters)}')
         print(f'Введенные Вами буквы, которых в слове нет: {" ".join(mistakes_letters)}')
         print(f'Слово:    {" ".join(result.values())}')
@@ -61,6 +57,13 @@ def main() -> None:
             if l == letter:
                 result.update({i:l})
         
+        if '_ ' not in result.values():
+            print('\033c')
+            print(f'Вы угадали слово "{word}"! Поздравляю!\n\n')
+            fireworks()
+            sleep(5)
+            sys.exit()
+
     print(f'Вы проиграли!\nЗагаданное слово было\n{word.upper()}')
     hang(mistakes=len(mistakes_letters))
     sleep(5)
