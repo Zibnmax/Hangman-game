@@ -1,4 +1,5 @@
 import sys
+import os
 from random import choice
 from time import sleep
 
@@ -11,6 +12,16 @@ class HangmanGame:
         self.word = self.pick_word()
         self.mistakes_letters = []
         self.display = {i:'_ ' for i in range(0, len(self.word))}
+        self.clear = self.get_os_name()
+
+    def get_os_name(self) -> str:
+        '''
+        Get OS name for screen clearing
+        '''
+        if os.name == 'nt':
+            return 'cls'
+        else:
+            return 'clear'
 
 
     def run_intro(self) -> None:
@@ -39,7 +50,7 @@ class HangmanGame:
         Checking user input
         '''
         if letter not in 'абвгдеёжзийклмнопрстуфхцчшщьыъэюя':
-            print('Пожалуйста, вводите буквы русского алфавита.')
+            print('Пожалуйста, вводите буквы русского алфавита\n')
             return False
         
         if letter in self.mistakes_letters:
@@ -70,7 +81,8 @@ class HangmanGame:
         Run a game
         '''
         self.run_intro()
-        print('\033c')
+        os.system(self.clear)
+        print('\n')
         
         while len(self.mistakes_letters) < 6:
             
@@ -80,14 +92,13 @@ class HangmanGame:
             print(f'Слово:    {" ".join(self.display.values())}')
             
             self.letter = input('\nВведите букву: ')[0].lower()
-            
-            print('\033c')
+            os.system(self.clear)
             
             if not self.is_letter_in_word(self.letter):
                 continue
 
             
-            print(f'Есть буква "{self.letter}" в слове.')
+            print(f'Есть буква "{self.letter}" в слове.\n')
             for i, l in enumerate(self.word):
                 if l == self.letter:
                     self.display.update({i:l})

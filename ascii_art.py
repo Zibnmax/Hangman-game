@@ -18,8 +18,6 @@ def hangman_logo() -> None:
 def fireworks() -> None:
     '''Prints victory fireworks'''
     fireworks ="""                *    *
-   *         '       *       .  *   '     .           * *
-                                                               '
        *                *'          *          *        '
    .           *               |               /
                '.         |    |      '       |   '     *
@@ -42,9 +40,7 @@ def fireworks() -> None:
                    .'                       `._             *  '
    '       '                        .       .  `.     .
        .                      *                  `
-               *        '             '                          .
-     .                          *        .           *  *
-             *        .                                    '"""
+     .                          *        .           *  *"""
     print(fireworks)
 
 
