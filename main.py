@@ -74,6 +74,14 @@ class HangmanGame:
         fireworks()
         sleep(5)
         sys.exit()
+        
+    def loss(self) -> None:
+        '''
+        Display loss
+        '''
+        print(f'Вы проиграли!\nЗагаданное слово было\n{self.word.upper()}')
+        hang(mistakes=len(self.mistakes_letters))
+        sleep(5)
 
 
     def run_game(self) -> None:
@@ -106,9 +114,7 @@ class HangmanGame:
             if '_ ' not in self.display.values():
                 self.victory()
 
-        print(f'Вы проиграли!\nЗагаданное слово было\n{self.word.upper()}')
-        hang(mistakes=len(self.mistakes_letters))
-        sleep(5)
+        self.loss()
 
 
 
