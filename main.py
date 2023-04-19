@@ -1,9 +1,18 @@
 import sys
 import os
+from dataclasses import dataclass
 from random import choice
 from time import sleep
 
 from ascii_art import hangman_logo, hang, fireworks
+
+
+@dataclass()
+class PlayerScore:
+    name: str
+    total_games: int = 0
+    total_wins: int = 0
+    total_loss: int = 0
 
 
 class HangmanGame:
@@ -13,6 +22,7 @@ class HangmanGame:
         self.mistakes_letters = []
         self.display = {i:'_ ' for i in range(0, len(self.word))}
         self.clear = self.get_os_name()
+        self.player = PlayerScore()
 
     def get_os_name(self) -> str:
         '''
@@ -29,7 +39,7 @@ class HangmanGame:
         Running inrto and rules
         '''
         hangman_logo()
-        self.player_name = input('Чтобы выиграть, нужно отгадать загаданное слово. Вы можете вводить по одной букве за раз.\n\
+        self.player.name = input('Чтобы выиграть, нужно отгадать загаданное слово. Вы можете вводить по одной букве за раз.\n\
 Слово - это существительное в единственном числе. У Вас есть 6 попыток. Удачи :)\nЧтобы продолжить, введите своё имя:\n')
 
 
@@ -70,16 +80,17 @@ class HangmanGame:
         Display victory fireworks
         '''
         print('\033c')
-        print(f'Вы угадали слово "{self.word.upper()}"! Поздравляю!\n\n')
+        self.player.total_wins += 1
+        print(f'Вы угадали слово "{self.word.upper()}"! Поздравляю, {self.player.name}!\n\n')
         fireworks()
         sleep(5)
-        sys.exit()
-        
+
     def loss(self) -> None:
         '''
         Display loss
         '''
         print(f'Вы проиграли!\nЗагаданное слово было\n{self.word.upper()}')
+        self.player.total_loss += 1
         hang(mistakes=len(self.mistakes_letters))
         sleep(5)
 
@@ -88,8 +99,10 @@ class HangmanGame:
         '''
         Run a game
         '''
+        
         self.run_intro()
         os.system(self.clear)
+        self.player.total_games += 1
         print('\n')
         
         while len(self.mistakes_letters) < 6:
@@ -113,8 +126,10 @@ class HangmanGame:
             
             if '_ ' not in self.display.values():
                 self.victory()
-
-        self.loss()
+        else:
+            self.loss()
+            
+        # TODO: add PlayerScore to ScoreBoard
 
 
 
