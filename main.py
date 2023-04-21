@@ -5,6 +5,7 @@ from random import choice
 from time import sleep
 
 from ascii_art import hangman_logo, hang, fireworks
+from score_board import ScoreBoard
 
 
 @dataclass()
@@ -20,6 +21,7 @@ class HangmanGame:
     def __init__(self) -> None:
         self.word = self.pick_word()
         self.mistakes_letters = []
+        self.right_letters = []
         self.display = {i:'_ ' for i in range(0, len(self.word))}
         self.clear = self.get_os_name()
         self.player = PlayerScore()
@@ -43,6 +45,14 @@ class HangmanGame:
 Слово - это существительное в единственном числе. У Вас есть 6 попыток. Удачи :)\nЧтобы продолжить, введите своё имя:\n')
 
 
+    def update_score(self) -> None:
+        '''
+        Update score
+        '''
+        ScoreBoard.add_results(self.player)
+        self.player = PlayerScore()
+
+
     def pick_word(self) -> str:
         '''
         Picking a random word from "words.txt"
@@ -55,7 +65,7 @@ class HangmanGame:
             print('Что-то не так со словарем :(')
             sys.exit()
 
-    def is_letter_in_word(self, letter) -> bool:
+    def is_letter_in_word(self, letter: str) -> bool:
         '''
         Checking user input
         '''
@@ -63,7 +73,7 @@ class HangmanGame:
             print('Пожалуйста, вводите буквы русского алфавита\n')
             return False
         
-        if letter in self.mistakes_letters:
+        if letter in (self.mistakes_letters or self.right_letters):
             print('Вы уже вводили эту букву, попробуйте другую\n')
             return False
 
@@ -120,16 +130,24 @@ class HangmanGame:
 
             
             print(f'Есть буква "{self.letter}" в слове.\n')
+            self.right_letters.append(self.letter)
             for i, l in enumerate(self.word):
                 if l == self.letter:
                     self.display.update({i:l})
             
             if '_ ' not in self.display.values():
                 self.victory()
+                break
         else:
             self.loss()
             
         # TODO: add PlayerScore to ScoreBoard
+        self.update_score()
+        sleep(5)
+        os.system(self.clear)
+        ScoreBoard.display_scoreboard()
+        input('Any key to exit')
+        sys.exit()
 
 
 
